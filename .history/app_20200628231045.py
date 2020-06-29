@@ -3,7 +3,7 @@ import os
 from flask import Flask, jsonify
 
 
-from rules import RULES
+
 
 
 
@@ -32,13 +32,3 @@ def create_app(config=None):
             pass
         else:
             raise KeyError("This Table doesn't exist") 
-
-    @app.route('/delete/<table>/<idx>'):
-    def delete(table, idx):
-        if table == 'Character':
-            #id 
-            pass
-        else:
-            raise KeyError("This Table doesn't exist") 
-
-    

@@ -37,7 +37,6 @@ def create_app(config=None):
     def delete(table, idx):
         if table == 'Character':
             #id 
-            pass
         else:
             raise KeyError("This Table doesn't exist") 
 

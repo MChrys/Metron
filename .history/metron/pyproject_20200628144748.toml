@@ -9,20 +9,17 @@ keywords = ["Poetry", "Metron", "Flask"]
 [tool.poetry.dependencies]
 python = "^3.7"
 flask = "*"
-flask-SQLalchemy = "*"
-
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
 pylint = "*"
+flask-SQLalchemy = "*"
 pylint-flask = "*"
-pylint_flask_sqlalchemy = "*"
-
+pylint-flask-sqlalchemy = "*"
 
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
-
 
 [tool.poetry.scripts]
 run = "wsgi:main"
