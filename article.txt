@@ -1,0 +1,9 @@
+https://medium.com/@doedotdev/docker-flask-a-simple-tutorial-bbcb2f4110b5
+
+https://medium.com/georgian-impact-blog/python-tooling-makes-a-project-tick-181d567eea44
+
+https://towardsdatascience.com/ultimate-setup-for-your-next-python-project-179bda8a7c2c
+
+https://towardsdatascience.com/automating-every-aspect-of-your-python-project-6517336af9da
+
+https://hackingandslacking.com/package-python-projects-the-proper-way-with-poetry-ca1e94a1727b
