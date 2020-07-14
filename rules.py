@@ -16,7 +16,7 @@ def Chara_rules():
             assert char['Hat'] == 'null',str_rule.format("Only human have Hat")
 
         if 'p' in char['Name']:
-            assert ColorHat('YELLOW') is not char['Hat']['Color'] , str_rule.format("Only human have Hat")
+            assert ColorHat('YELLOW') is not char['Hat'].Color , str_rule.format("Only human have Hat")
         return True
 
     #add new rule

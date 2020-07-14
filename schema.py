@@ -7,6 +7,15 @@ from flask_sqlalchemy import SQLAlchemy
 from marshmallow_sqlalchemy import ModelSchema
 from marshmallow import fields
 
+
+
+class HatSchema(ModelSchema):
+    class Meta(ModelSchema.Meta):
+        model = Hat
+        sqla_session = db.session
+    Id = fields.Number(dump_only=True)
+    Color = EnumField(ColorHat,by_value = True)
+
 class CharacterSchema(ModelSchema):
     class Meta(ModelSchema.Meta):
         model = Character
@@ -16,13 +25,8 @@ class CharacterSchema(ModelSchema):
     Age = fields.String(required=True)
     Weight = fields.String(required=True)
     Human = fields.Boolean(required=True)
-    Hat = fields.Nested(required=False, many= False)
+    Hat = ModelSchema.Nested(HatSchema,required=False, many= False)
 
-class HatSchema(ModelSchema):
-    class Meta(ModelSchema.Meta):
-        model = Hat
-        sqla_session = db.session
-    Id = fields.Number(dump_only=True)
-    Color = EnumField(ColorHat,by_value = True)
+
 
 
