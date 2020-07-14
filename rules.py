@@ -8,7 +8,7 @@ def Chara_rules():
     def Age(char):
         assert char['Age'] > 0 ,str_rule.format(" 'Age' > 0" )
         if char['Wheight'] > 80:
-            assert Age > 10, str_rule.format(" 'Weight' > 80  ->  'Age' > 10 " ) 
+            assert char['Age'] > 10, str_rule.format(" 'Weight' > 80  ->  'Age' > 10 " ) 
         return True
 
     def Hat(char):
@@ -27,5 +27,5 @@ def Chara_rules():
 #print(rule())
 
 
-Character_RULES = Chara_rule()
+Character_rules = Chara_rules()
 #from copy import copy

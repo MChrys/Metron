@@ -1,44 +1,15 @@
-import os 
+# app.py - a minimal flask api using flask_restful
+from flask import Flask
+from flask_restful import Resource, Api
 
-from flask import Flask, jsonify
+app = Flask(__name__)
+api = Api(app)
 
+class HelloWorld(Resource):
+    def get(self):
+        return {'hello': 'world'}
 
-from rules import RULES
+api.add_resource(HelloWorld, '/')
 
-
-
-def create_app(config=None):
-    app = Flask(__name__)
-
-
-    app.config.update(dict(DEBUG=True))
-    app.config.update(config or {})
-
-    @app.route('/add/<table>')
-    def add(table):
-        if table == 'Character':
-            pass
-        elif table == 'Hat':
-            pass
-        else:
-            raise KeyError("This Table doesn't exist") 
-
-    @app.route('/update/<table>/<idx>')
-    def update(table , idx):
-        if table == 'Character':
-            #id 
-            pass
-        elif table == 'Hat':
-            pass
-        else:
-            raise KeyError("This Table doesn't exist") 
-
-    @app.route('/delete/<table>/<idx>'):
-    def delete(table, idx):
-        if table == 'Character':
-            #id 
-            pass
-        else:
-            raise KeyError("This Table doesn't exist") 
-
-    
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
