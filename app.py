@@ -3,9 +3,9 @@ import os
 from flask import Flask, jsonify, make_response, request
 from flask_sqlalchemy import SQLAlchemy
 from schema import CharacterSchema, HatSchema
-from models import Character, Hat
+from models import Character, Hat, ColorHat
 from flask_marshmallow import Marshmallow
-import simplejson as json
+import json
 from init_app import app , db , ma
 #app = Flask(__name__)
 
@@ -47,7 +47,8 @@ def add():
         Name=request.args.get('Name')
         Age=request.args.get('Age')
         Weight=request.args.get('Weight')
-        Human= bool(request.args.get('Human'))
+        Human= json.loads(request.args.get('Human').lower())
+        print('human', Human)
         if 'Color' in request.args:
             from models import ColorHat, Hat
 
@@ -61,7 +62,7 @@ def add():
                 'Human' : Human,
                 'Hat' : hat
             }
-            assert Character_rules['Hat'](params)
+            
             #hat = hat_schema.load({'Color' : Color})
             result_hat = hat_schema.dump(hat.create())
 
@@ -70,9 +71,10 @@ def add():
                 'Name' : Name,
                 'Age' : Age,
                 'Weight' : Weight ,
-                'Human' : Human
+                'Human' : Human,
+                'Hat': None
             }
-            
+        assert Character_rules['Hat'](params)
         assert Character_rules['Age'](params)
 
      
@@ -99,8 +101,18 @@ def update( idx):
     try:
         data = request.get_json()
         get_character = Character.query.get(id)
+        print(get_character)
         for k, v in data.items():
-            setattr(get_character,k,v)
+            #assert k in get_character.keys() , "{} doesn't define Character Schema"
+            if k == 'Color':
+                print('COLOR HAT DUMPS', json.dumps(ColorHat[k]))
+                get_character['Hat']['Color']= json.dumps(ColorHat[k])
+            else: 
+                setattr(get_character,k,v)
+            
+
+        assert Character_rules['Hat'](params)
+        assert Character_rules['Age'](params)
         db.session.add(get_character)
         db.session.commit()
         character_schema =CharacterSchema()

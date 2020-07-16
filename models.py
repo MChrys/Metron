@@ -47,6 +47,7 @@ class Character(db.Model):
         self.Name = Name
         self.Age = Age
         self.Weight = Weight
+        print('Human',Human)
         self.Human = Human
         self.Hat = Hat
     def __repr__(self):

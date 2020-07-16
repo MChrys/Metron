@@ -22,8 +22,8 @@ class CharacterSchema(ModelSchema):
         sqla_session = db.session
     Id = fields.Number(dump_only=True)
     Name = fields.String(required=True)
-    Age = fields.String(required=True)
-    Weight = fields.String(required=True)
+    Age = fields.Integer(required=True)
+    Weight = fields.Integer(required=True)
     Human = fields.Boolean(required=True)
     Hat = fields.Nested(HatSchema,required=False, many= False)
 

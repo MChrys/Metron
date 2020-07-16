@@ -13,9 +13,9 @@ def Chara_rules():
 
     def Hat(char):
         if not char['Human']:
-            assert char['Hat'] == 'null',str_rule.format("Only human have Hat")
-
-        if 'p' in char['Name']:
+            assert char['Hat'] is None ,str_rule.format("Only human have Hat")
+        
+        if 'p' in char['Name'].lower():
             assert ColorHat('YELLOW') is not char['Hat'].Color , str_rule.format("Only human have Hat")
         return True
 
