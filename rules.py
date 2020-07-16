@@ -6,9 +6,9 @@ def Chara_rules():
     str_rule = "The  rule : {} is not valided"
 
     def Age(char):
-        assert char['Age'] > 0 ,str_rule.format(" 'Age' > 0" )
-        if char['Wheight'] > 80:
-            assert char['Age'] > 10, str_rule.format(" 'Weight' > 80  ->  'Age' > 10 " ) 
+        assert int(char['Age']) > 0 ,str_rule.format(" 'Age' > 0" )
+        if int(char['Weight']) > 80:
+            assert int(char['Age']) > 10, str_rule.format(" 'Weight' > 80  ->  'Age' > 10 " ) 
         return True
 
     def Hat(char):

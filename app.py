@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from schema import CharacterSchema, HatSchema
 from models import Character, Hat
 from flask_marshmallow import Marshmallow
-
+import simplejson as json
 from init_app import app , db , ma
 #app = Flask(__name__)
 
@@ -14,10 +14,32 @@ from init_app import app , db , ma
 #app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 #db = SQLAlchemy(app)
 
-def create_app(app , db,config=None):
 
-    @app.route('/create/', method = ['POST'])
-    def add(table):
+#@app.route('/', methods = ['GET'])
+@app.route('/index/', methods = ['GET'])
+def welcome():
+    return 'hello Metron'
+
+@app.route('/testup', methods = ['POST','GET'])
+def testup():
+    if request.method =='POST':
+        print('POST ------->')
+        a= request.args.to_dict()
+        print('request.get_json() ->',a)
+        print(json.dumps([{'color':'test'}]))
+        try:
+            return json.dumps([a]) 
+        except Exception as e:
+            print(str(e))
+
+    else:
+        print('GET ------->') 
+        return 'database'
+
+
+@app.route('/create/', methods = ['POST'])
+def add():
+    try:
         from rules import Character_rules
 
         character_schema = CharacterSchema()
@@ -53,52 +75,55 @@ def create_app(app , db,config=None):
             
         assert Character_rules['Age'](params)
 
-        try: 
-            #character = character_schema.load(params)
-            character = Character(**params)
-            result_character = character_schema.dump(character.create())
-            return make_response(jsonify({'character': result_character}),200)
+     
+        #character = character_schema.load(params)
+        character = Character(**params)
+        result_character = character_schema.dump(character.create())
+        return make_response(jsonify({'character': result_character}),200)
 
-        except Exception as e:
-            raise str(e) 
-    
-    @app.route('/read/', methods= ['GET'])
-    def get_all_characters():
-        try:
-            get_characters = Character.query.all()
-            character_schema = CharacterSchema(many=True)
-            characters = character_schema.dump(get_characters)
-            return make_response(jsonify({"character": characters}))
-        except Exception as e:
-            raise str(e)
+    except Exception as e:
+        raise str(e) 
 
-    @app.route('/update/<idx>', methods=['PUT'])
-    def update(table , idx):
-        try:
-            data = request.get_json()
-            get_character = Character.query.get(id)
-            for k, v in data.items():
-                setattr(get_character,k,v)
-            db.session.add(get_character)
-            db.session.commit()
-            character_schema =CharacterSchema()
-            character = character_schema.dump(get_character)
-            return make_response(jsonify({"character": character}))
+@app.route('/read/', methods= ['GET'])
+def get_all_characters():
+    try:
+        get_characters = Character.query.all()
+        character_schema = CharacterSchema(many=True)
+        characters = character_schema.dump(get_characters)
+        return make_response(jsonify({"character": characters}),202)
+    except Exception as e:
+        raise str(e)
 
-        except Exception as e:
-            raise str(e)
+@app.route('/update/<idx>', methods=['PUT'])
+def update( idx):
+    try:
+        data = request.get_json()
+        get_character = Character.query.get(id)
+        for k, v in data.items():
+            setattr(get_character,k,v)
+        db.session.add(get_character)
+        db.session.commit()
+        character_schema =CharacterSchema()
+        character = character_schema.dump(get_character)
+        return make_response(jsonify({"character": character}))
 
-    @app.route('/delete/<idx>', methods= ['DELETE'])
-    def delete(table, idx):
-        try:
-            get_character = Character.query.get(idx)
-            db.session.delete(get_character)
-            db.session.commit()
-            return make_response('',204)
-        except Exception as e:
-            raise str(e)
-    return app
+    except Exception as e:
+        raise str(e)
+
+@app.route('/delete/<idx>', methods= ['DELETE'])
+def delete( idx):
+    try:
+        get_character = Character.query.get(idx)
+        db.session.delete(get_character)
+        db.session.commit()
+        return make_response('',204)
+    except Exception as e:
+        raise str(e)
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return "<h1>404</h1><p>The resource could not be found.</p>", 404
+
 
 if __name__ == "__main__":
-    app  =create_app(app, db)
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=False, host='0.0.0.0', port=5000)

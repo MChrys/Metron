@@ -13,9 +13,10 @@ class ColorHat(AutoName):
     GREEN = auto()
 
 class Hat(db.Model):
-    __tablename__ = 'hats'
+    __tablename__ = 'hat'
     Id = db.Column(db.Integer(), primary_key = True)
     Color = db.Column(db.Enum(ColorHat))
+    #character = db.relationship("Character", uselist=False, back_populates="hat")
     def create(self):
       db.session.add(self)
       db.session.commit()
@@ -28,13 +29,16 @@ class Hat(db.Model):
 
 
 class Character(db.Model):
-    __tablename__ = 'characters'
+    __tablename__ = 'character'
     Id = db.Column(db.Integer(), primary_key=True)
     Name = db.Column(db.String(), nullable=False)
-    Age = db.Coulmn(db.Integer(), nullable=False)
+    Age = db.Column(db.Integer(), nullable=False)
     Weight = db.Column(db.Integer() ,nullable=False)
     Human = db.Column(db.Boolean(), nullable=False)
-    Hat = db.relationship(Hat, uselist=False, nullable=True, cascade = "all, delete, delete-orphan" )
+    Hat_id = db.Column(db.Integer(), db.ForeignKey('hat.Id'), nullable =True)
+    #Hat = db.relationship("Hat", back_populates ="character", single_parent= True,uselist=False, cascade = "all, delete, delete-orphan" )
+    Hat = db.relationship("Hat", single_parent= True,uselist=False, cascade = "all, delete, delete-orphan" )
+
     def create(self):
       db.session.add(self)
       db.session.commit()
@@ -48,4 +52,4 @@ class Character(db.Model):
     def __repr__(self):
         return '' % self.Id
 
-db.create.all()
+db.create_all()

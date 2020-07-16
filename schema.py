@@ -25,7 +25,7 @@ class CharacterSchema(ModelSchema):
     Age = fields.String(required=True)
     Weight = fields.String(required=True)
     Human = fields.Boolean(required=True)
-    Hat = ModelSchema.Nested(HatSchema,required=False, many= False)
+    Hat = fields.Nested(HatSchema,required=False, many= False)
 
 
 

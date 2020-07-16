@@ -1,8 +1,10 @@
-FROM python:3.7
+FROM base-app:latest
 COPY . /app
-ENV APP_SETTINGS="config.DevelopmentConfig"
-ENV DATABASE_URL="postgresql:///root:password@0.0.0.0:5432/metron_database"
 WORKDIR /app
-RUN pip install -r requirements.txt
-ENTRYPOINT ["python"]
-#CMD ["app.py"]
+ENV APP_SETTINGS="config.DevelopmentConfig"
+#ENV DATABASE_URL="postgresql+psycopg2://metron:password@0.0.0.0:5432/metron_database"
+EXPOSE 5000
+#RUN pip install -r requirements.txt
+#ENTRYPOINT ["python"]
+#CMD [ "python migrate.py db init", "python migrate.py db migrate","python migrate.py db upgrade","python app.py"]
+CMD ["python","app.py"]
