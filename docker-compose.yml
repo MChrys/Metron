@@ -13,13 +13,17 @@ services:
     build : 
       context: .
       dockerfile:  Dockerfile
+      args: 
+        file_app: app.py 
     environment:
       DATABASE_URL : postgresql+psycopg2://test:password@database/metron_database
-
+      APP_SETTINGS : "config.TestingConfig"
     ports:
         - "8000:5000"
     depends_on: 
         - database
+    volumes: 
+      - ./:/app
 volumes:
   database-data: # named volumes can be managed easier using docker-compose
 

@@ -16,30 +16,30 @@ from init_app import app , db , ma
 
 
 #@app.route('/', methods = ['GET'])
-@app.route('/index/', methods = ['GET'])
-def welcome():
-    return 'hello Metron'
+def set_route(app, db):
+    @app.route('/index/', methods = ['GET'])
+    def welcome():
+        return 'hello Metron'
 
-@app.route('/testup', methods = ['POST','GET'])
-def testup():
-    if request.method =='POST':
-        print('POST ------->')
-        a= request.args.to_dict()
-        print('request.get_json() ->',a)
-        print(json.dumps([{'color':'test'}]))
-        try:
-            return json.dumps([a]) 
-        except Exception as e:
-            print(str(e))
+    @app.route('/testup', methods = ['POST','GET'])
+    def testup():
+        if request.method =='POST':
+            print('POST ------->')
+            a= request.args.to_dict()
+            print('request.get_json() ->',a)
+            print(json.dumps([{'color':'test'}]))
+            try:
+                return json.dumps([a]) 
+            except Exception as e:
+                print(str(e))
 
-    else:
-        print('GET ------->') 
-        return 'database'
+        else:
+            print('GET ------->') 
+            return 'database'
 
 
-@app.route('/create/', methods = ['POST'])
-def add():
-    try:
+    @app.route('/create/', methods = ['POST'])
+    def add():
         from rules import Character_rules
 
         character_schema = CharacterSchema()
@@ -76,66 +76,66 @@ def add():
             }
         assert Character_rules['Hat'](params)
         assert Character_rules['Age'](params)
+        try:
+            #character = character_schema.load(params)
+            character = Character(**params)
+            result_character = character_schema.dump(character.create())
+            return make_response(jsonify({'character': result_character}),200)
 
-     
-        #character = character_schema.load(params)
-        character = Character(**params)
-        result_character = character_schema.dump(character.create())
-        return make_response(jsonify({'character': result_character}),200)
+        except Exception as e:
+            raise str(e) 
 
-    except Exception as e:
-        raise str(e) 
+    @app.route('/read/', methods= ['GET'])
+    def get_all_characters():
+        try:
+            get_characters = Character.query.all()
+            character_schema = CharacterSchema(many=True)
+            characters = character_schema.dump(get_characters)
+            return make_response(jsonify({"character": characters}),202)
+        except Exception as e:
+            raise str(e)
 
-@app.route('/read/', methods= ['GET'])
-def get_all_characters():
-    try:
-        get_characters = Character.query.all()
-        character_schema = CharacterSchema(many=True)
-        characters = character_schema.dump(get_characters)
-        return make_response(jsonify({"character": characters}),202)
-    except Exception as e:
-        raise str(e)
+    @app.route('/update/<idx>', methods=['PUT'])
+    def update( idx):
+        try:
+            data = request.get_json()
+            get_character = Character.query.get(id)
+            print(get_character)
+            for k, v in data.items():
+                #assert k in get_character.keys() , "{} doesn't define Character Schema"
+                if k == 'Color':
+                    print('COLOR HAT DUMPS', json.dumps(ColorHat[k]))
+                    get_character['Hat']['Color']= json.dumps(ColorHat[k])
+                else: 
+                    setattr(get_character,k,v)
+                
 
-@app.route('/update/<idx>', methods=['PUT'])
-def update( idx):
-    try:
-        data = request.get_json()
-        get_character = Character.query.get(id)
-        print(get_character)
-        for k, v in data.items():
-            #assert k in get_character.keys() , "{} doesn't define Character Schema"
-            if k == 'Color':
-                print('COLOR HAT DUMPS', json.dumps(ColorHat[k]))
-                get_character['Hat']['Color']= json.dumps(ColorHat[k])
-            else: 
-                setattr(get_character,k,v)
-            
+            assert Character_rules['Hat'](params)
+            assert Character_rules['Age'](params)
+            db.session.add(get_character)
+            db.session.commit()
+            character_schema =CharacterSchema()
+            character = character_schema.dump(get_character)
+            return make_response(jsonify({"character": character}))
 
-        assert Character_rules['Hat'](params)
-        assert Character_rules['Age'](params)
-        db.session.add(get_character)
-        db.session.commit()
-        character_schema =CharacterSchema()
-        character = character_schema.dump(get_character)
-        return make_response(jsonify({"character": character}))
+        except Exception as e:
+            raise str(e)
 
-    except Exception as e:
-        raise str(e)
+    @app.route('/delete/<idx>', methods= ['DELETE'])
+    def delete( idx):
+        try:
+            get_character = Character.query.get(idx)
+            db.session.delete(get_character)
+            db.session.commit()
+            return make_response('',204)
+        except Exception as e:
+            raise str(e)
 
-@app.route('/delete/<idx>', methods= ['DELETE'])
-def delete( idx):
-    try:
-        get_character = Character.query.get(idx)
-        db.session.delete(get_character)
-        db.session.commit()
-        return make_response('',204)
-    except Exception as e:
-        raise str(e)
-
-@app.errorhandler(404)
-def page_not_found(e):
-    return "<h1>404</h1><p>The resource could not be found.</p>", 404
-
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return "<h1>404</h1><p>The resource could not be found.</p>", 404
+    return app, db
 
 if __name__ == "__main__":
+    app, db = set_route(app, db)
     app.run(debug=False, host='0.0.0.0', port=5000)

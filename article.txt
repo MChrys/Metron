@@ -56,3 +56,9 @@ https://www.percona.com/blog/2019/11/19/installing-mysql-with-docker/
 
 # stackoverflow examples:
     docker-compose : https://stackoverflow.com/questions/56657683/postgres-docker-image-is-not-creating-database-with-custom-name
+
+# postgremigrate
+https://levelup.gitconnected.com/dockerizing-a-flask-application-with-a-postgres-database-b5e5bfc24848
+
+# goodwebsite for docker 
+https://www.bogotobogo.com/DevOps/Docker/Docker-Compose-FlaskREST-Service-Container-and-Apache-Container.php

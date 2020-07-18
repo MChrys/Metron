@@ -30,10 +30,15 @@ while 1:
         break
 
 print('Connected!')
-app = Flask(__name__)
 
-app.config.from_object(os.environ['APP_SETTINGS'])
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#app.logger.addHandler(handler)
-db = SQLAlchemy(app)
-ma = Marshmallow(db)
+def create_app(Config= None):
+    app = Flask(__name__)
+
+    app.config.from_object(os.environ['APP_SETTINGS'])
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    #app.logger.addHandler(handler)
+    db = SQLAlchemy(app)
+    ma = Marshmallow(db)
+    return app, db , ma
+
+app, db , ma = create_app()
