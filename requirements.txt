@@ -6,11 +6,23 @@ flask-pytest == 0.0.5
 pytest == 5.2
 pylint == 2.5.3
 pylint-flask == 0.6
-pylint_flask_sqlalchemy == 0.2.0
+
 marshmallow-enum == 1.5.1
 py-postgresql == 1.2.1
 pytest-cov >= 2.0
 pytest-filter-subpackage>=0.1
+
 Flask-Migrate == 2.5.3
 flask-marshmallow == 0.13.0
+flask-redis==0.4.0
+Flask-RESTful==0.3.8
+Flask-Script ==2.0.6
+pylint_flask_sqlalchemy == 0.2.0
+
+psycopg2-binary==2.8.4
 psycopg2 == 2.8.5
+marshmallow-sqlalchemy == 0.23.1
+simplejson == 3.17.0
+
+urllib3==1.25.8
+Werkzeug==1.0.0

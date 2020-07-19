@@ -8,5 +8,7 @@ EXPOSE 5000
 #ENTRYPOINT ["python"]
 ARG file_app
 ENV file_app=${file_app}
+ENV FLASK_APP=${file_app}
+
 #CMD [ "python migrate.py db init", "python migrate.py db migrate","python migrate.py db upgrade","python app.py"]
 CMD python $file_app 

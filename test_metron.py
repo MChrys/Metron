@@ -52,17 +52,14 @@ def init_database():
 
 def test_index(test_client, init_database):
     res =test_client.get("/")
-    # print(dir(res), res.status_code)
+    print(dir(res), res.status_code)
     assert res.status_code == 200
     assert b"Hello Metron" in res.data
 
 
-def test_add_character(test_client, init_database):
-    res = test_client.get("/foo/12345")
+def test_create(test_client, init_database):
+    res = test_client.post("/create?Name=Alain&Age=18&Weight=80&Human=True&Color=YELLOW")
     assert res.status_code == 200
-    assert b"12345" in res.data
-
-def test_color_hat(test_client, init_database):
-    from models import ColorHat
-    res = test_client.get('/add/Hat')
+    print(res.data)
+    #assert b"12345" in res.data
     
