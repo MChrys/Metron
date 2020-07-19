@@ -7,38 +7,21 @@ from models import Character, Hat, ColorHat
 from flask_marshmallow import Marshmallow
 import json
 from init_app import app , db , ma
-#app = Flask(__name__)
 
 
-#app.config.from_object(os.environ['APP_SETTINGS'])
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#db = SQLAlchemy(app)
-
-
-#@app.route('/', methods = ['GET'])
 def set_route(app, db):
-    @app.route('/index/', methods = ['GET'])
+    '''
+    Description : 
+    set routes of the CRUD function in app created
+    in ini_app.py
+
+    '''
+    @app.route('/')
+    @app.route('/index', methods = ['GET'])
     def welcome():
         return 'hello Metron'
 
-    @app.route('/testup', methods = ['POST','GET'])
-    def testup():
-        if request.method =='POST':
-            print('POST ------->')
-            a= request.args.to_dict()
-            print('request.get_json() ->',a)
-            print(json.dumps([{'color':'test'}]))
-            try:
-                return json.dumps([a]) 
-            except Exception as e:
-                print(str(e))
-
-        else:
-            print('GET ------->') 
-            return 'database'
-
-
-    @app.route('/create/', methods = ['POST'])
+    @app.route('/create', methods = ['POST'])
     def add():
         from rules import Character_rules
 
@@ -85,7 +68,7 @@ def set_route(app, db):
         except Exception as e:
             raise str(e) 
 
-    @app.route('/read/', methods= ['GET'])
+    @app.route('/read', methods= ['GET'])
     def get_all_characters():
         try:
             get_characters = Character.query.all()
@@ -122,7 +105,7 @@ def set_route(app, db):
             raise str(e)
 
     @app.route('/delete/<idx>', methods= ['DELETE'])
-    def delete( idx):
+    def delete(idx):
         try:
             get_character = Character.query.get(idx)
             db.session.delete(get_character)
@@ -136,6 +119,8 @@ def set_route(app, db):
         return "<h1>404</h1><p>The resource could not be found.</p>", 404
     return app, db
 
+app, db = set_route(app, db)
+
 if __name__ == "__main__":
-    app, db = set_route(app, db)
+    
     app.run(debug=False, host='0.0.0.0', port=5000)

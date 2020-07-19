@@ -8,15 +8,19 @@ class AutoName(Enum):
         return name
 
 class ColorHat(AutoName):
+    '''
+    Description :
+        Colors Avaible for Hat
+    '''
     PURPLE = auto()
     YELLOW = auto()
     GREEN = auto()
 
 class Hat(db.Model):
-    __tablename__ = 'hat'
+
     Id = db.Column(db.Integer(), primary_key = True)
     Color = db.Column(db.Enum(ColorHat))
-    #character = db.relationship("Character", uselist=False, back_populates="hat")
+    
     def create(self):
       db.session.add(self)
       db.session.commit()
@@ -29,14 +33,15 @@ class Hat(db.Model):
 
 
 class Character(db.Model):
+
     __tablename__ = 'character'
+    __table_args__ = {'extend_existing': True}
     Id = db.Column(db.Integer(), primary_key=True)
     Name = db.Column(db.String(), nullable=False)
     Age = db.Column(db.Integer(), nullable=False)
     Weight = db.Column(db.Integer() ,nullable=False)
     Human = db.Column(db.Boolean(), nullable=False)
     Hat_id = db.Column(db.Integer(), db.ForeignKey('hat.Id'), nullable =True)
-    #Hat = db.relationship("Hat", back_populates ="character", single_parent= True,uselist=False, cascade = "all, delete, delete-orphan" )
     Hat = db.relationship("Hat", single_parent= True,uselist=False, cascade = "all, delete, delete-orphan" )
 
     def create(self):
