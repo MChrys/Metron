@@ -44,7 +44,7 @@ def Chara_rules():
         r22 =  ColorHat['YELLOW'] is not char['Hat'].Color
         r2 = sequ_bool([r21,r22],"Patrick is not allowed to possess YELLOW hat" )
 
-        r3 = ColorHat[char['Hat'].Color.value], " This Color is not avaible "
+        r3 = ColorHat[char['Hat'].Color.value], " This Color is not available "
 
         rules =[r1,r2,r3]
         return sequ_rules(rules)
