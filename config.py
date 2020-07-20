@@ -6,7 +6,7 @@ class Config(object):
     DEBUG = False
     TESTING = False
     CSRF_ENABLED = True
-    SECRET_KEY = 'this-really-needs-to-be-changed'
+    SECRET_KEY = 'METRON75'
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     JSONIFY_PRETTYPRINT_REGULAR = False
 
