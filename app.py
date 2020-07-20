@@ -12,7 +12,7 @@ from init_app import app , db , ma
 def set_route(app, db):
     '''
     Description : 
-        set routes of the CRUD function in app created
+        set routes of the CRUD functions for an app created
         in ini_app.py
     '''
     @app.route('/')
