@@ -14,11 +14,11 @@ def test_client():
     test_app = app 
     testing_client = test_app.test_client()
  
-    # Establish an application context before running the tests.
+    # Establish an application context before running the tests
     ctx = test_app.app_context()
     ctx.push()
  
-    yield testing_client  # this is where the testing happens!
+    yield testing_client  
  
     ctx.pop()
 
@@ -41,7 +41,7 @@ def init_database():
     # Commit the changes for the users
     db.session.commit()
 
-    yield db  # this is where the testing happens!
+    yield db  
     db.session.close()
     db.drop_all()
 
@@ -75,3 +75,20 @@ def test_delete(test_client, init_database):
     res2 = test_client.get("/delete/{}".format(idx))
     assert res.status_code ==202
     
+
+def test_update(test_client, init_database):
+    res = test_client.get("/read_all")
+
+    import json
+    characters = json.loads(res.data.decode("utf-8").replace('\n',''))
+    liste = characters['characters']
+    lenght = len(liste)
+    idx = str(int(liste[-1]['Id']))
+    res2 = test_client.get("/read/{}".format(idx))
+    character = json.loads(res2.data.decode("utf-8").replace('\n',''))
+    print(character)
+    color = bytes(character['character']['Hat']['Color'],'utf-8')
+    assert color in res2.data
+    res3 = test_client.put("/update/{}?Color=GREEN".format(idx))
+    res4 = test_client.get("/read/{}".format(idx))
+    assert b'GREEN' in res4.data

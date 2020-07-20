@@ -70,8 +70,6 @@ def set_route(app, db):
         for b, m  in message :
             if not(b):
                 return make_response(m,401)
-        #assert Character_rules['Hat'](params)
-        #assert Character_rules['Age'](params)
         try:
             #character = character_schema.load(params)
             character = Character(**params)
@@ -104,34 +102,51 @@ def set_route(app, db):
 
     @app.route('/update/<idx>', methods=['PUT'])
     def update(idx):
-        try:
-            data = request.get_json()
-            get_character = Character.query.get(idx)
-            print(get_character)
-            for k, v in data.items():
-                #assert k in get_character.keys() , "{} doesn't define Character Schema"
-                if k == 'Color':
-                    print('COLOR HAT DUMPS', json.dumps(ColorHat[k]))
-                    get_character['Hat']['Color']= json.dumps(ColorHat[k])
-                else: 
-                    setattr(get_character,k,v)
-            #chara = CharacterSchema()
-            #params = chara.dump()
+   
+        import json
+        from rules import Character_rules
 
-            message = [rule(get_character) for k,rule in Character_rules.items() ]
-            for b, m  in message :
-                if not(b):
-                    return make_response(m,401)
-            #assert Character_rules['Hat'](params)
-            #assert Character_rules['Age'](params)
-            db.session.add(get_character)
-            db.session.commit()
-            character_schema =CharacterSchema()
-            character = character_schema.dump(get_character)
-            return make_response(jsonify({"character": character}))
+        get_character = Character.query.get(idx)
+        schema = CharacterSchema()
 
-        except Exception as e:
-            raise str(e)
+        params = schema.dump(get_character)
+        if 'Color' in request.args:
+            from models import ColorHat, Hat
+            Color = request.args.get('Color')
+            hat = Hat(Color = Color)
+            hat_schema = HatSchema()
+            params['Hat'] = hat
+            setattr(getattr(get_character,'Hat'),'Color',ColorHat[Color])
+        else:
+            params['Hat'] = None
+        if 'Name' in request.args:
+            Name=request.args.get('Name')
+            params['Name'] = Name
+            setattr(get_character,'Name',Name)
+        if 'Age' in request.args:
+            Age=request.args.get('Age')
+            params['Age'] = json.loads(Age)
+            setattr(get_character,'Age',json.loads(Age)) 
+        if 'Weight' in request.args:
+            Weight=request.args.get('Weight')
+            params['Weight'] = json.loads(Age)
+            setattr(get_character,'Weight',json.loads(Weight))
+        if 'Human' in request.args:
+            Human= json.loads(request.args.get('Human').lower())
+            params['Human'] = Human
+            setattr(get_character,'Human',Human)
+
+        message = [rule(params) for k,rule in Character_rules.items() ]
+        for b, m  in message :
+            if not(b):
+                return make_response(m,401)
+
+        db.session.add(get_character)
+        db.session.commit()
+        character_schema =CharacterSchema()
+        character = character_schema.dump(get_character)
+        return make_response(jsonify({"character": character}))
+
 
     @app.route('/delete/<idx>', methods= ['DELETE'])
     def delete(idx):
