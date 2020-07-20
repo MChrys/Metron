@@ -24,7 +24,7 @@ def set_route(app, db):
     def add():
         '''
         Description :
-            Create a new character with 
+            Create a new Character with Hat associate, following the rules
         Example :
             >>> request.post(/create?Name=Alain&Age=18&Weight=80
             /   &Human=True&Color=YELLOW)
@@ -65,7 +65,7 @@ def set_route(app, db):
                 'Human' : Human,
                 'Hat': None
             }
-        #Check all rules
+        #Check all the rules
         message = [rule(params) for k,rule in Character_rules.items() ]
         for b, m  in message :
             if not(b):
